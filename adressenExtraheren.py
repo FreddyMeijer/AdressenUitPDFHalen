@@ -2,20 +2,25 @@ import PyPDF2
 import tkinter as tk
 from tkinter import filedialog
 
+
 def selectFile():
-    File=filedialog.askopenfilename(
+    File = filedialog.askopenfilename(
         title="Selecteer PDF bestand",
-        filetypes=[("PDF Bestanden","*.pdf"),("Alle bestanden","*.*")]
+        filetypes=[("PDF Bestanden", "*.pdf"), ("Alle bestanden", "*.*")]
     )
     if File:
         return File
 
+
 def adressenExtraheren(bestand):
 
     while True:
-        product = input("Typ het producttype (alleen 02 en 04 op dit moment): ") #04, 08, 09, 21, 22, 30 of 51): ")
+        # 04, 08, 09, 21, 22, 30 of 51): ")
+        product = input(
+            "Typ het producttype (alleen 02, 04 of 08 op dit moment): ")
         try:
-            if product in ["02","04"]: #,"04","08","09","21","22","30","51"]:
+            # ,"04","08","09","21","22","30","51"]:
+            if product in ["02", "04", "08"]:
                 break
         except ValueError:
             print("Onjuist product gekozen.")
@@ -52,7 +57,7 @@ def adressenExtraheren(bestand):
                     )
                     adres = adres[:-27] + "\n"
                     file.write(adres)
-    
+
     if product == "04":
         with open("adressen_producttype_04.csv", "w", encoding="utf-8") as file:
             file.write("AANSLAGBILJETNUMMER;NAAM;ADRES;POSTCODE\n")
@@ -71,7 +76,7 @@ def adressenExtraheren(bestand):
                     )
                     adres = adres[:-27] + "\n"
                     file.write(adres)
-    
+
     if product == "08":
         with open("adressen_producttype_08.csv", "w", encoding="utf-8") as file:
             file.write("AANSLAGBILJETNUMMER;NAAM;ADRES;POSTCODE\n")
@@ -90,5 +95,6 @@ def adressenExtraheren(bestand):
                     )
                     adres = adres[:-27] + "\n"
                     file.write(adres)
+
 
 adressenExtraheren(selectFile())
