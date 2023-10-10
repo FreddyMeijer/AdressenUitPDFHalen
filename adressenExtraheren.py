@@ -71,5 +71,24 @@ def adressenExtraheren(bestand):
                     )
                     adres = adres[:-27] + "\n"
                     file.write(adres)
+    
+    if product == "08":
+        with open("adressen_producttype_08.csv", "w", encoding="utf-8") as file:
+            file.write("AANSLAGBILJETNUMMER;NAAM;ADRES;POSTCODE\n")
+            for i in range(len(lines)):
+                if "Retouradres: Postbus 495, 2300 AL Leiden" in lines[i]:
+                    uniekkenmerk = lines[i + 15]
+                    uniekkenmerk = uniekkenmerk[29:]
+                    adres = (
+                        uniekkenmerk
+                        + ";"
+                        + lines[i + 1]
+                        + ";"
+                        + lines[i + 2]
+                        + ";"
+                        + lines[i + 3]
+                    )
+                    adres = adres[:-27] + "\n"
+                    file.write(adres)
 
 adressenExtraheren(selectFile())
