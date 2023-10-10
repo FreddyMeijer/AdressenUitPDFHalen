@@ -1,27 +1,55 @@
 import PyPDF2
+import tkinter as tk
+from tkinter import filedialog
 
-pdf_file_path = r"C:\Users\FREDDY.MEIJER\Downloads\Merged_PDF.pdf"
+def selectFile():
+    File=filedialog.askopenfilename(
+        title="Selecteer PDF bestand",
+        filetypes=[("PDF Bestanden","*.pdf"),("Alle bestanden","*.*")]
+    )
+    if File:
+        return File
 
-with open(pdf_file_path, 'rb') as pdf_file:
-    pdf_reader = PyPDF2.PdfReader(pdf_file)
+def adressenExtraheren(bestand):
 
-    extracted_text = ''
+    while True:
+        product = input("Typ het producttype (02, 04, 08, 09, 21, 22, 30 of 51): ")
+        try:
+            if product in ["02","04","08","09","21","22","30","51"]:
+                break
+        except ValueError:
+            print("Onjuist product gekozen.")
 
-    for page_num in range(len(pdf_reader.pages)):
-        page = pdf_reader.pages[page_num]
-        page_text = page.extract_text()
+    with open(bestand, "rb") as pdf_file:
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
 
-        extracted_text += page_text
+        extracted_text = ""
 
-lines = extracted_text.splitlines()
+        for page_num in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_num]
+            page_text = page.extract_text()
 
-#NAHEFFINGSAANSLAGEN PRODUCT 02
-with open('output.csv', 'w' , encoding='utf-8') as file:
-    for i in range(len(lines)):
-        if "Retouradres: Postbus 495, 2300 AL Leiden" in lines[i]:
-            kenteken = lines[i+30]
-            kenteken = kenteken[17:].split(' ',1)
-            kenteken = kenteken[0]
-            adres = kenteken + ";" + lines[i+1] + ";" + lines[i+2] + ";" + lines[i+3]
-            adres = adres[:-27] + "\n"
-            file.write(adres)
+            extracted_text += page_text
+
+    lines = extracted_text.splitlines()
+
+    if product == "02":
+        with open("output.csv", "w", encoding="utf-8") as file:
+            for i in range(len(lines)):
+                if "Retouradres: Postbus 495, 2300 AL Leiden" in lines[i]:
+                    kenteken = lines[i + 30]
+                    kenteken = kenteken[17:].split(" ", 1)
+                    kenteken = kenteken[0]
+                    adres = (
+                        kenteken
+                        + ";"
+                        + lines[i + 1]
+                        + ";"
+                        + lines[i + 2]
+                        + ";"
+                        + lines[i + 3]
+                    )
+                    adres = adres[:-27] + "\n"
+                    file.write(adres)
+
+adressenExtraheren(selectFile())
