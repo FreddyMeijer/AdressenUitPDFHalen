@@ -13,9 +13,9 @@ def selectFile():
 def adressenExtraheren(bestand):
 
     while True:
-        product = input("Typ het producttype (02, 04, 08, 09, 21, 22, 30 of 51): ")
+        product = input("Typ het producttype (alleen 02 op dit moment)") #04, 08, 09, 21, 22, 30 of 51): ")
         try:
-            if product in ["02","04","08","09","21","22","30","51"]:
+            if product in ["02"]: #,"04","08","09","21","22","30","51"]:
                 break
         except ValueError:
             print("Onjuist product gekozen.")
@@ -35,13 +35,14 @@ def adressenExtraheren(bestand):
 
     if product == "02":
         with open("output.csv", "w", encoding="utf-8") as file:
+            file.write("KENTEKEN;NAAM;ADRES;POSTCODE\n")
             for i in range(len(lines)):
                 if "Retouradres: Postbus 495, 2300 AL Leiden" in lines[i]:
-                    kenteken = lines[i + 30]
-                    kenteken = kenteken[17:].split(" ", 1)
-                    kenteken = kenteken[0]
+                    uniekkenmerk = lines[i + 30]
+                    uniekkenmerk = uniekkenmerk[17:].split(" ", 1)
+                    uniekkenmerk = uniekkenmerk[0]
                     adres = (
-                        kenteken
+                        uniekkenmerk
                         + ";"
                         + lines[i + 1]
                         + ";"
